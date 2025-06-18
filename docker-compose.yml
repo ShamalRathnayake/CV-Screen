@@ -1,0 +1,38 @@
+
+services:
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: cvscreen-app
+    ports:
+      - '4000:4000'
+    env_file:
+      - .env.prod
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+    volumes:
+      - .:/app
+    command: npm start
+
+  mongodb:
+    image: mongo:7
+    container_name: cvscreen-mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - '11434:11434'
+    volumes:
+      - ./llm:/root/.ollama
+    restart: unless-stopped
+
+volumes:
+  mongo_data: 
