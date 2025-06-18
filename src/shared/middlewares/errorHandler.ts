@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { AppError } from '../utils/error.utils';
 import { ErrorCode } from '../config/error.config';
+import { logger } from '../utils/logger.utils';
 
 export const errorHandler = (
   err: unknown,
@@ -21,7 +22,14 @@ export const errorHandler = (
     });
   }
 
-  // logger.error(appError);
+  logger.error({
+    message: appError.message,
+    code: appError.code,
+    statusCode: appError.statusCode,
+    path: req.originalUrl,
+    method: req.method,
+    ...(appError.details && { details: appError.details }),
+  });
 
   return res.status(appError.statusCode).json(appError.toJSON());
 };

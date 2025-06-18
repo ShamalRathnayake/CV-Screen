@@ -11,6 +11,7 @@ import http from 'http';
 import { commonConfig } from './shared/config/common.config';
 import router from './shared/routes';
 import { notFoundHandler } from './shared/middlewares/notFoundHandler';
+import { morganStream } from './shared/utils/logger.utils';
 
 let server: http.Server;
 
@@ -32,7 +33,11 @@ export function createApp(): Application {
     })
   );
 
-  app.use(morgan(config.nodeEnv === 'production' ? 'combined' : 'dev'));
+  app.use(
+    morgan(config.nodeEnv === 'production' ? 'combined' : 'dev', {
+      stream: morganStream,
+    })
+  );
 
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true }));
