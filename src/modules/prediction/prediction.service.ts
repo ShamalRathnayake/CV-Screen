@@ -69,6 +69,14 @@ export const makePrediction = async ({
       await EmbeddingService.getInstance()
     ).getAverageEmbedding(preparedJdText);
 
+    const rawCvEmbedding = await (
+      await EmbeddingService.getInstance()
+    ).getEmbedding(cvDataAsText);
+
+    const rawJdEmbedding = await (
+      await EmbeddingService.getInstance()
+    ).getEmbedding(jdText as string);
+
     const cosineSimilarity = {
       total: await (
         await EmbeddingService.getInstance()
@@ -82,6 +90,9 @@ export const makePrediction = async ({
       workExp: await (
         await EmbeddingService.getInstance()
       ).cosineSimilarity(workExpEmbedding, jdEmbedding),
+      raw: await (
+        await EmbeddingService.getInstance()
+      ).cosineSimilarity(rawCvEmbedding, rawJdEmbedding),
     };
 
     return {
