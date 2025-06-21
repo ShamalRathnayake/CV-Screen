@@ -4,6 +4,6 @@ import { uploadFile } from './upload.controller';
 
 const router = Router();
 
-router.post('/', upload.single('file'), uploadFile);
+router.post('/', upload.array('file'), uploadFile);
 
 export default router;

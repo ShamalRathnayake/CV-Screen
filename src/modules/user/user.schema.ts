@@ -14,3 +14,12 @@ export const updateUserSchema = Joi.object().keys({
   phoneNo: Joi.string().min(10).max(12),
   location: Joi.string(),
 });
+
+export const getUserByIdSchema = Joi.object().keys({
+  id: Joi.string().alphanum().required(),
+});
+
+export const loginSchema = Joi.object().keys({
+  email: Joi.string().trim().required(),
+  password: Joi.string().min(8).max(50).required(),
+});

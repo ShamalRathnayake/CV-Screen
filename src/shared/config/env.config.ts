@@ -13,6 +13,8 @@ const envSchema = Joi.object({
   LOG_LEVEL: Joi.string()
     .valid('error', 'warn', 'info', 'verbose', 'debug', 'silly')
     .default('info'),
+  STRIPE_SECRET_KEY: Joi.string().min(10).required(),
+  PRO_CHARGE: Joi.number().required().min(10),
 }).unknown(true);
 
 const { error, value: envVars } = envSchema.validate(process.env);
@@ -27,4 +29,6 @@ export const config = {
   databaseUrl: envVars.DATABASE_URL,
   jwtSecret: envVars.JWT_SECRET,
   logLevel: envVars.LOG_LEVEL,
+  stripeSecret: envVars.STRIPE_SECRET_KEY,
+  proCharge: envVars.PRO_CHARGE,
 };

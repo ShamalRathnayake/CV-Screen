@@ -3,3 +3,9 @@ export interface MakePredictionDTO {
   jdFilename?: string;
   jdText?: string;
 }
+
+export interface MultiplePredictionDTO {
+  cvFileNames: Array<string>;
+  jdFilename?: string;
+  jdText?: string;
+}

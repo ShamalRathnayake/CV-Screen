@@ -13,9 +13,9 @@ export const uploadFile = async (
   next: NextFunction
 ): Promise<any> => {
   try {
-    const uploadedFile = await fileUploadService(req.file);
+    const uploadedFile = await fileUploadService(req.files);
 
-    return sendSuccess(res, uploadedFile, 'File uploaded successfully', 201);
+    return sendSuccess(res, uploadedFile, 'Files uploaded successfully', 201);
   } catch (err: any) {
     if (err instanceof AppError) throw err;
     else throw createUnexpectedError(err?.message);

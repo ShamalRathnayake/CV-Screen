@@ -8,4 +8,15 @@ export const permissions = {
     path: '/update',
     grantedUserRoles: [UserRole.USER],
   },
+  getUserById: {
+    path: '/:id',
+    grantedUserRoles: [UserRole.USER],
+  },
+  createPayment: {
+    path: '/payment',
+  },
+  login: {
+    path: '/login',
+    grantedUserRoles: [UserRole.USER],
+  },
 };
