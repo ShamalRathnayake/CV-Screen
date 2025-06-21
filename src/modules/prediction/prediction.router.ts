@@ -8,7 +8,7 @@ const router = Router();
 
 router.post(
   '/',
-  ValidatorService.validate(makePredictionSchema, validationSource.body),
+  ValidatorService.validate(validationSource.body, makePredictionSchema),
   makePrediction
 );
 

@@ -6,21 +6,42 @@ import {
   createUnauthorized,
   createValidationError,
 } from '../utils/error.factory.utils';
+import { verifyToken } from './token.service';
+import { UserService } from '../../modules/user/user.service';
 
 export class ValidatorService {
-  static validate(schema: Joi.ObjectSchema, source: validationSource): any {
-    return (req: Request, res: Response, next: NextFunction) => {
-      const data = req[source];
-      const { error } = schema.validate(data || {}, {
-        allowUnknown: source === validationSource.headers,
-        abortEarly: false,
-      });
+  static validate(
+    source: validationSource,
+    schema?: Joi.ObjectSchema,
+    roles: UserRole[] = []
+  ): any {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      if (source === validationSource.headers) {
+        const authHeader = req.headers.authorization;
+        if (!authHeader?.startsWith('Bearer ')) throw createUnauthorized();
+        const token = authHeader.split(' ')[1];
 
-      if (error) {
-        throw createValidationError(error.details[0].message);
+        const decoded = verifyToken(token);
+        const user = await UserService.checkUserExists(decoded.id);
+
+        if (!user || !roles.includes(decoded.role as UserRole))
+          throw createUnauthorized();
+
+        req.user = decoded;
+        next();
+      } else if (schema) {
+        const data = req[source];
+        const { error } = schema.validate(data || {}, {
+          allowUnknown: false,
+          abortEarly: false,
+        });
+
+        if (error) {
+          throw createValidationError(error.details[0].message);
+        }
+
+        next();
       }
-
-      next();
     };
   }
 
@@ -30,18 +51,6 @@ export class ValidatorService {
 
       if (error) {
         throw createValidationError(error.details[0].message);
-      }
-
-      next();
-    };
-  }
-
-  static authorizeRoles(roles: UserRole[]) {
-    return (req: Request, res: Response, next: NextFunction) => {
-      const user = req.user;
-
-      if (!user || !roles.includes(user.role as UserRole)) {
-        throw createUnauthorized();
       }
 
       next();

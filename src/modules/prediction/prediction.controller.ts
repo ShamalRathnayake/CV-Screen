@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Request, Response, NextFunction, RequestHandler } from 'express';
-import { sendError, sendSuccess } from '../../shared/utils/response.utils';
-import { logger } from '../../shared/utils/logger.utils';
+import { Request, Response, NextFunction } from 'express';
+import { sendSuccess } from '../../shared/utils/response.utils';
 import * as predictionService from './prediction.service';
 import { AppError } from '../../shared/utils/error.utils';
-import { ErrorCode } from '../../shared/config/error.config';
 import { MakePredictionDTO } from './prediction.dto';
 import { createUnexpectedError } from '../../shared/utils/error.factory.utils';
 

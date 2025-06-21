@@ -20,10 +20,10 @@ export class AppError extends Error {
     statusCode?: number;
     details?: any;
   }) {
-    super(message || ErrorMessages[code]);
+    super(details || ErrorMessages[code]);
     this.code = code;
     this.statusCode = statusCode || ErrorStatusCodes[code] || 500;
-    this.details = details;
+    this.details = message || ErrorMessages[code];
 
     Object.setPrototypeOf(this, AppError.prototype);
     Error.captureStackTrace(this, this.constructor);
