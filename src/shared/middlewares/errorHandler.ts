@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { AppError } from '../utils/error.utils';
 import { ErrorCode } from '../config/error.config';
 import { logger } from '../utils/logger.utils';
+import { sendError } from '../utils/response.utils';
 
 export const errorHandler = (
   err: unknown,
@@ -17,7 +18,6 @@ export const errorHandler = (
   } else {
     appError = new AppError({
       code: ErrorCode.INTERNAL_ERROR,
-      statusCode: 500,
       details: process.env.NODE_ENV === 'development' ? err : undefined,
     });
   }
@@ -31,5 +31,11 @@ export const errorHandler = (
     ...(appError.details && { details: appError.details }),
   });
 
-  return res.status(appError.statusCode).json(appError.toJSON());
+  return sendError(
+    res,
+    appError.message,
+    appError.statusCode,
+    appError.details,
+    appError.toJSON()
+  );
 };

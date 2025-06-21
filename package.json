@@ -23,6 +23,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@xenova/transformers": "^2.17.2",
+    "axios": "^1.10.0",
     "bcryptjs": "^3.0.2",
     "compression": "^1.8.0",
     "cors": "^2.8.5",
@@ -35,6 +37,9 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.16.0",
     "morgan": "^1.10.0",
+    "multer": "^2.0.1",
+    "ollama": "^0.5.16",
+    "pdf-parse": "^1.1.1",
     "pino": "^9.7.0",
     "pino-pretty": "^13.0.0"
   },
@@ -48,7 +53,9 @@
     "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "^1.9.10",
+    "@types/multer": "^1.4.13",
     "@types/node": "^24.0.3",
+    "@types/pdf-parse": "^1.1.5",
     "@types/supertest": "^2.0.16",
     "eslint": "^9.29.0",
     "globals": "^16.2.0",

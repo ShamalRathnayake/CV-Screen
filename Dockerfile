@@ -1,5 +1,5 @@
 
-FROM node:20-alpine AS builder
+FROM node:20 AS builder
 
 WORKDIR /app
 COPY package*.json ./
@@ -16,6 +16,8 @@ WORKDIR /app
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/dist ./dist
 RUN npm ci --omit=dev
+
+RUN node -e "const t = require('@xenova/transformers'); t.pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2')"
 
 EXPOSE 4000
 

@@ -1,4 +1,8 @@
-import { ErrorCode, ErrorMessages } from '../config/error.config';
+import {
+  ErrorCode,
+  ErrorMessages,
+  ErrorStatusCodes,
+} from '../config/error.config';
 
 export class AppError extends Error {
   public readonly code: ErrorCode;
@@ -13,12 +17,12 @@ export class AppError extends Error {
   }: {
     code: ErrorCode;
     message?: string;
-    statusCode: number;
+    statusCode?: number;
     details?: any;
   }) {
     super(message || ErrorMessages[code]);
     this.code = code;
-    this.statusCode = statusCode;
+    this.statusCode = statusCode || ErrorStatusCodes[code] || 500;
     this.details = details;
 
     Object.setPrototypeOf(this, AppError.prototype);
@@ -27,7 +31,6 @@ export class AppError extends Error {
 
   toJSON() {
     return {
-      success: false,
       error: {
         code: this.code,
         message: this.message,
