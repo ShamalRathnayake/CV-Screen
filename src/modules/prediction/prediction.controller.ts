@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Request, Response, NextFunction } from 'express';
 import { sendSuccess } from '../../shared/utils/response.utils';
-import * as predictionService from './prediction.service';
 import { AppError } from '../../shared/utils/error.utils';
 import { MakePredictionDTO, MultiplePredictionDTO } from './prediction.dto';
 import { createUnexpectedError } from '../../shared/utils/error.factory.utils';
+import Prediction from './prediction.service';
 
 export const makePrediction = async (
   req: Request<object, object, MakePredictionDTO>,
@@ -12,7 +12,7 @@ export const makePrediction = async (
   next: NextFunction
 ): Promise<any> => {
   try {
-    const prediction = await predictionService.makePrediction(req.body);
+    const prediction = await Prediction.makePrediction(req.body);
 
     return sendSuccess(res, prediction, '', 200);
   } catch (err: any) {
@@ -27,8 +27,9 @@ export const makeMultiplePredictions = async (
   next: NextFunction
 ): Promise<any> => {
   try {
-    const prediction = await predictionService.makeMultiplePredictions(
-      req.body
+    const prediction = await Prediction.makeMultiplePredictions(
+      req.body,
+      req.user
     );
 
     return sendSuccess(res, prediction, '', 200);
