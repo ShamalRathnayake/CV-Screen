@@ -4,7 +4,7 @@ import { sendSuccess } from '../../shared/utils/response.utils';
 import { AppError } from '../../shared/utils/error.utils';
 import { createUnexpectedError } from '../../shared/utils/error.factory.utils';
 import { UserService } from './user.service';
-import { IUser } from './user.model';
+import { IUser } from './user.types';
 
 export const createUser = async (
   req: Request<object, object, Partial<IUser>>,
@@ -46,7 +46,7 @@ export const getUserById = async (
     const user = await UserService.getUserById(req?.params?.id);
     return sendSuccess(res, user, '', 200);
   } catch (err: any) {
-    if (err instanceof AppError) throw err;
+    if (err instanceof AppError) next(err);
     else throw createUnexpectedError(err?.message);
   }
 };
@@ -60,7 +60,7 @@ export const createPayment = async (
     const secret = await UserService.createPayment();
     return sendSuccess(res, secret, '', 200);
   } catch (err: any) {
-    if (err instanceof AppError) throw err;
+    if (err instanceof AppError) next(err);
     else throw createUnexpectedError(err?.message);
   }
 };
@@ -74,7 +74,7 @@ export const login = async (
     const auth = await UserService.login(req.body);
     return sendSuccess(res, auth, '', 200);
   } catch (err: any) {
-    if (err instanceof AppError) throw err;
+    if (err instanceof AppError) next(err);
     else throw createUnexpectedError(err?.message);
   }
 };

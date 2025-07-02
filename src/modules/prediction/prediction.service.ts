@@ -1,5 +1,10 @@
 import { existsSync } from 'fs';
-import { MakePredictionDTO, MultiplePredictionDTO } from './prediction.dto';
+import {
+  ICosineSimilarity,
+  IPredictionRequest,
+  IPredictionRequestMultiple,
+  IPredictionResponse,
+} from './prediction.types';
 import { multerConfig } from '../../shared/config/multer.config';
 import { join } from 'path';
 import {
@@ -10,14 +15,16 @@ import { PredictorService } from '../../shared/services/predictor.service';
 import JdData from '../jdData/jdData.service';
 import CvData from '../cvData/cvData.service';
 import predictionModel from './prediction.model';
-import { IUser } from '../user/user.model';
+import { ICv } from '../cvData/cvData.types';
+import { IJd } from '../jdData/jdData.types';
+import { IUser } from '../user/user.types';
 
 export default class Prediction {
   static async makePrediction({
     cvFileName,
     jdFilename,
     jdText,
-  }: MakePredictionDTO) {
+  }: IPredictionRequest): Promise<IPredictionResponse> {
     if (!cvFileName) throw createBadRequest('cvFileName is required');
 
     if (!jdFilename && !jdText)
@@ -54,8 +61,8 @@ export default class Prediction {
     const savedCv = await CvData.saveCvData(extractedCv);
 
     let predictionRecord = new predictionModel({
-      cv_id: savedCv._id,
-      jd_id: savedJd._id,
+      cvId: savedCv._id,
+      jdId: savedJd._id,
       cosineSimilarity,
     });
 
@@ -67,18 +74,18 @@ export default class Prediction {
         {
           cosineSimilarity,
           extractedCv,
-          cv_id: savedCv._id,
-          jd_id: savedJd._id,
-          prediction_id: predictionRecord._id,
+          cvId: savedCv._id.toString(),
+          jdId: savedJd._id.toString(),
+          predictionId: predictionRecord._id.toString(),
         },
       ],
     };
   }
 
   static async makeMultiplePredictions(
-    { cvFileNames, jdFilename, jdText }: MultiplePredictionDTO,
+    { cvFileNames, jdFilename, jdText }: IPredictionRequestMultiple,
     userFromToken?: Partial<IUser>
-  ) {
+  ): Promise<IPredictionResponse> {
     if (!cvFileNames || cvFileNames.length === 0)
       throw createBadRequest('cvFileNames is required');
 
@@ -98,7 +105,13 @@ export default class Prediction {
 
     const predictionService = PredictorService.getInstance();
 
-    const { extractedJD, cvData } = await predictionService.predict(
+    const {
+      extractedJD,
+      cvData,
+    }: {
+      cvData: { extractedCv: ICv; cosineSimilarity: ICosineSimilarity[] }[];
+      extractedJD: IJd;
+    } = await predictionService.predict(
       [...cvFileNames.map((cv: any) => join(__dirname, multerConfig.path, cv))],
       jdFilename
         ? join(__dirname, multerConfig.path, jdFilename)
@@ -132,9 +145,9 @@ export default class Prediction {
       result.push({
         cosineSimilarity,
         extractedCv,
-        cv_id: savedCv._id,
-        jd_id: savedJd._id,
-        prediction_id: predictionRecord._id,
+        cvId: savedCv._id.toString(),
+        jdId: savedJd._id.toString(),
+        predictionId: predictionRecord._id.toString(),
       });
     }
 

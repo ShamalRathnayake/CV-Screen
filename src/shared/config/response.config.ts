@@ -1,16 +1,16 @@
 export const cvResFormat = {
   type: 'object',
   properties: {
-    personal_info: {
+    personalInfo: {
       type: 'object',
       properties: {
-        full_name: { type: ['string', 'null'] },
+        fullName: { type: ['string', 'null'] },
         email: { type: ['string', 'null'], format: 'email' },
         phone: { type: ['string', 'null'] },
         address: { type: ['string', 'null'] },
-        linkedin_url: { type: ['string', 'null'], format: 'uri' },
-        github_url: { type: ['string', 'null'], format: 'uri' },
-        portfolio_url: { type: ['string', 'null'], format: 'uri' },
+        linkedinUrl: { type: ['string', 'null'], format: 'uri' },
+        githubUrl: { type: ['string', 'null'], format: 'uri' },
+        portfolioUrl: { type: ['string', 'null'], format: 'uri' },
         website: { type: ['string', 'null'], format: 'uri' },
         dob: { type: ['string', 'null'], format: 'date' },
         nationality: { type: ['string', 'null'] },
@@ -19,17 +19,13 @@ export const cvResFormat = {
           enum: ['Male', 'Female', 'Other', null],
         },
       },
-      required: ['full_name', 'email'],
+      required: ['fullName', 'email'],
     },
-
-    // summary: { type: ['string', 'null'] },
-    // objective: { type: ['string', 'null'] },
-
     skills: {
       type: 'object',
       properties: {
-        technical_skills: { type: 'array', items: { type: 'string' } },
-        soft_skills: { type: 'array', items: { type: 'string' } },
+        technicalSkills: { type: 'array', items: { type: 'string' } },
+        softSkills: { type: 'array', items: { type: 'string' } },
         languages: {
           type: 'array',
           items: {
@@ -45,9 +41,8 @@ export const cvResFormat = {
           },
         },
       },
-      required: ['technical_skills'],
+      required: ['technicalSkills'],
     },
-
     education: {
       type: 'array',
       items: {
@@ -55,17 +50,16 @@ export const cvResFormat = {
         properties: {
           institution: { type: ['string', 'null'] },
           degree: { type: ['string', 'null'] },
-          field_of_study: { type: ['string', 'null'] },
-          start_date: { type: ['string', 'null'], format: 'date' },
-          end_date: { type: ['string', 'null'], format: 'date' },
+          fieldOfStudy: { type: ['string', 'null'] },
+          startDate: { type: ['string', 'null'], format: 'date' },
+          endDate: { type: ['string', 'null'], format: 'date' },
           gpa: { type: ['string', 'null'] },
           location: { type: ['string', 'null'] },
         },
         required: ['institution', 'degree'],
       },
     },
-
-    work_experience: {
+    workExperience: {
       type: 'array',
       items: {
         type: 'object',
@@ -73,16 +67,15 @@ export const cvResFormat = {
           company: { type: ['string', 'null'] },
           position: { type: ['string', 'null'] },
           location: { type: ['string', 'null'] },
-          start_date: { type: ['string', 'null'], format: 'date' },
-          end_date: { type: ['string', 'null'], format: 'date' },
-          currently_working: { type: ['boolean', 'null'] },
+          startDate: { type: ['string', 'null'], format: 'date' },
+          endDate: { type: ['string', 'null'], format: 'date' },
+          currentlyWorking: { type: ['boolean', 'null'] },
           responsibilities: { type: 'array', items: { type: 'string' } },
-          technologies_used: { type: 'array', items: { type: 'string' } },
+          technologiesUsed: { type: 'array', items: { type: 'string' } },
         },
         required: ['company', 'position'],
       },
     },
-
     certifications: {
       type: 'array',
       items: {
@@ -90,15 +83,14 @@ export const cvResFormat = {
         properties: {
           name: { type: ['string', 'null'] },
           issuer: { type: ['string', 'null'] },
-          issue_date: { type: ['string', 'null'], format: 'date' },
-          expiration_date: { type: ['string', 'null'], format: 'date' },
-          credential_id: { type: ['string', 'null'] },
-          credential_url: { type: ['string', 'null'], format: 'uri' },
+          issueDate: { type: ['string', 'null'], format: 'date' },
+          expirationDate: { type: ['string', 'null'], format: 'date' },
+          credentialId: { type: ['string', 'null'] },
+          credentialUrl: { type: ['string', 'null'], format: 'uri' },
         },
         required: ['name'],
       },
     },
-
     projects: {
       type: 'array',
       items: {
@@ -108,83 +100,22 @@ export const cvResFormat = {
           description: { type: ['string', 'null'] },
           technologies: { type: 'array', items: { type: 'string' } },
           url: { type: ['string', 'null'], format: 'uri' },
-          github_repo: { type: ['string', 'null'], format: 'uri' },
+          githubRepo: { type: ['string', 'null'], format: 'uri' },
         },
         required: ['title'],
       },
     },
-
-    // publications: {
-    //   type: 'array',
-    //   items: {
-    //     type: 'object',
-    //     properties: {
-    //       title: { type: ['string', 'null'] },
-    //       journal: { type: ['string', 'null'] },
-    //       year: { type: ['string', 'null'] },
-    //       link: { type: ['string', 'null'], format: 'uri' },
-    //     },
-    //     required: ['title'],
-    //   },
-    // },
-
-    // awards: {
-    //   type: 'array',
-    //   items: {
-    //     type: 'object',
-    //     properties: {
-    //       title: { type: ['string', 'null'] },
-    //       issuer: { type: ['string', 'null'] },
-    //       year: { type: ['string', 'null'] },
-    //     },
-    //     required: ['title'],
-    //   },
-    // },
-
-    // volunteer_experience: {
-    //   type: 'array',
-    //   items: {
-    //     type: 'object',
-    //     properties: {
-    //       organization: { type: ['string', 'null'] },
-    //       role: { type: ['string', 'null'] },
-    //       location: { type: ['string', 'null'] },
-    //       start_date: { type: ['string', 'null'], format: 'date' },
-    //       end_date: { type: ['string', 'null'], format: 'date' },
-    //       description: { type: ['string', 'null'] },
-    //     },
-    //     required: ['organization'],
-    //   },
-    // },
-
-    // hobbies_and_interests: {
-    //   type: 'array',
-    //   items: { type: 'string' },
-    // },
-
-    // references: {
-    //   type: 'array',
-    //   items: {
-    //     type: 'object',
-    //     properties: {
-    //       name: { type: ['string', 'null'] },
-    //       relationship: { type: ['string', 'null'] },
-    //       contact: { type: ['string', 'null'] },
-    //       email: { type: ['string', 'null'], format: 'email' },
-    //     },
-    //     required: ['name'],
-    //   },
-    // },
   },
-  required: ['personal_info', 'skills', 'education'],
+  required: ['personalInfo', 'skills', 'education'],
 };
+
 export const jdResFormat = {
   type: 'object',
   properties: {
-    job_title: { type: ['string', 'null'] },
-    company_name: { type: ['string', 'null'] },
+    jobTitle: { type: ['string', 'null'] },
+    companyName: { type: ['string', 'null'] },
     location: { type: ['string', 'null'] },
-    employment_type: {
+    employmentType: {
       type: ['string', 'null'],
       enum: [
         'Full-time',
@@ -196,13 +127,12 @@ export const jdResFormat = {
         null,
       ],
     },
-    experience_level: {
+    experienceLevel: {
       type: ['string', 'null'],
       enum: ['Entry', 'Mid', 'Senior', 'Lead', 'Manager', null],
     },
-    required_experience_years: { type: ['number', 'null'] },
-
-    salary_range: {
+    requiredExperienceYears: { type: ['number', 'null'] },
+    salaryRange: {
       type: 'object',
       properties: {
         min: { type: ['number', 'null'] },
@@ -222,22 +152,19 @@ export const jdResFormat = {
       },
       required: [],
     },
-
-    skills_required: {
+    skillsRequired: {
       description:
         'List of required technical and domain-specific skills (e.g., JavaScript, AWS, accounting)',
       type: 'array',
       items: { type: 'string' },
     },
-
     technologies: {
       description:
         'List of tools, frameworks, or platforms explicitly mentioned (e.g., React, Docker, Kubernetes)',
       type: 'array',
       items: { type: 'string' },
     },
-
-    education_requirements: {
+    educationRequirements: {
       description:
         'Formal education qualifications like degrees or certifications',
       type: 'array',
@@ -248,7 +175,7 @@ export const jdResFormat = {
             type: ['string', 'null'],
             description: 'e.g., BSc, MSc, PhD, High School Diploma',
           },
-          field_of_study: {
+          fieldOfStudy: {
             type: ['string', 'null'],
             description: 'e.g., Computer Science, Business Administration',
           },
@@ -260,38 +187,31 @@ export const jdResFormat = {
         required: ['degree'],
       },
     },
-
     responsibilities: {
       type: 'array',
       items: { type: 'string' },
     },
-
     qualifications: {
       type: 'array',
       items: { type: 'string' },
     },
-
-    preferred_qualifications: {
+    preferredQualifications: {
       type: 'array',
       items: { type: 'string' },
     },
-
-    soft_skills: {
+    softSkills: {
       type: 'array',
       items: { type: 'string' },
     },
-
-    job_description_summary: { type: ['string', 'null'] },
-
+    jobDescriptionSummary: { type: ['string', 'null'] },
     benefits: {
       type: 'array',
       items: { type: 'string' },
     },
-
-    application_deadline: { type: ['string', 'null'], format: 'date' },
-    job_posting_date: { type: ['string', 'null'], format: 'date' },
-    job_id: { type: ['string', 'null'] },
+    applicationDeadline: { type: ['string', 'null'], format: 'date' },
+    jobPostingDate: { type: ['string', 'null'], format: 'date' },
+    jobId: { type: ['string', 'null'] },
     source: { type: ['string', 'null'] },
   },
-  required: ['job_title', 'skills_required', 'responsibilities'],
+  required: ['jobTitle', 'skillsRequired', 'responsibilities'],
 };

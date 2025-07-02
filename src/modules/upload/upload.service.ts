@@ -1,6 +1,9 @@
 import { logger } from '../../shared/utils/logger.utils';
+import { IUploadResponse } from './upload.types';
 
-export const fileUploadService = async (files: any) => {
+export const fileUploadService = async (
+  files: any
+): Promise<IUploadResponse[]> => {
   if (!files || files.length === 0) {
     throw new Error('File not found');
   }

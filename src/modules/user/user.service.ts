@@ -5,7 +5,8 @@ import {
   createInvalidCredentials,
   createUnprocessableEntity,
 } from '../../shared/utils/error.factory.utils';
-import { UserModel, IUser } from './user.model';
+import { UserModel } from './user.model';
+import { IUser } from './user.types';
 
 export class UserService {
   static async createUser({

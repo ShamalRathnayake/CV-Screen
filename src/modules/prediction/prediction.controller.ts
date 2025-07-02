@@ -2,12 +2,15 @@
 import { Request, Response, NextFunction } from 'express';
 import { sendSuccess } from '../../shared/utils/response.utils';
 import { AppError } from '../../shared/utils/error.utils';
-import { MakePredictionDTO, MultiplePredictionDTO } from './prediction.dto';
+import {
+  IPredictionRequest,
+  IPredictionRequestMultiple,
+} from './prediction.types';
 import { createUnexpectedError } from '../../shared/utils/error.factory.utils';
 import Prediction from './prediction.service';
 
 export const makePrediction = async (
-  req: Request<object, object, MakePredictionDTO>,
+  req: Request<object, object, IPredictionRequest>,
   res: Response,
   next: NextFunction
 ): Promise<any> => {
@@ -16,13 +19,13 @@ export const makePrediction = async (
 
     return sendSuccess(res, prediction, '', 200);
   } catch (err: any) {
-    if (err instanceof AppError) throw err;
+    if (err instanceof AppError) next(err);
     else throw createUnexpectedError(err?.message);
   }
 };
 
 export const makeMultiplePredictions = async (
-  req: Request<object, object, MultiplePredictionDTO>,
+  req: Request<object, object, IPredictionRequestMultiple>,
   res: Response,
   next: NextFunction
 ): Promise<any> => {
@@ -34,7 +37,7 @@ export const makeMultiplePredictions = async (
 
     return sendSuccess(res, prediction, '', 200);
   } catch (err: any) {
-    if (err instanceof AppError) throw err;
+    if (err instanceof AppError) next(err);
     else throw createUnexpectedError(err?.message);
   }
 };

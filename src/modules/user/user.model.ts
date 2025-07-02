@@ -1,20 +1,9 @@
 // user.model.ts
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { generateToken } from '../../shared/services/token.service';
 import { UserRole } from '../../shared/types/roles.enum';
-
-export interface IUser extends Document {
-  _id: string;
-  email: string;
-  password: string;
-  designation: string;
-  phoneNo: number;
-  location: string;
-  role: string;
-  generateAuthToken(): string;
-  comparePassword(candidatePassword: string): Promise<boolean>;
-}
+import { IUser } from './user.types';
 
 const UserSchema: Schema = new Schema(
   {

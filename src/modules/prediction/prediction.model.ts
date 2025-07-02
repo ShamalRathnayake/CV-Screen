@@ -1,18 +1,19 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema, Types } from 'mongoose';
+import { IPrediction } from './prediction.types';
 
-const predictionSchema = new mongoose.Schema({
-  cv_id: {
-    type: mongoose.Types.ObjectId,
+const predictionSchema = new Schema({
+  cvId: {
+    type: Types.ObjectId,
     ref: 'cv_data',
     required: true,
   },
-  jd_id: {
-    type: mongoose.Types.ObjectId,
+  jdId: {
+    type: Types.ObjectId,
     ref: 'jd_data',
     required: true,
   },
-  user_id: {
-    type: mongoose.Types.ObjectId,
+  userId: {
+    type: Types.ObjectId,
     ref: 'user',
   },
   cosineSimilarity: {
@@ -24,4 +25,4 @@ const predictionSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model('prediction', predictionSchema);
+export default mongoose.model<IPrediction>('prediction', predictionSchema);
