@@ -5,6 +5,8 @@ on:
     branches: [main, develop]
   pull_request:
     branches: [main, develop]
+  schedule:
+    - cron: '0 2 * * 1' # Every Monday at 2 AM
 
 env:
   NODE_VERSION: '22'
@@ -155,8 +157,6 @@ jobs:
   dependency-updates:
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule'
-    schedule:
-      - cron: '0 2 * * 1' # Every Monday at 2 AM
 
     steps:
       - name: Checkout code
