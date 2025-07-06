@@ -1,0 +1,63 @@
+name: Dependency Updates
+
+on:
+  schedule:
+    - cron: '0 2 * * 1' # Every Monday at 2 AM
+  workflow_dispatch: # Allow manual trigger
+
+env:
+  NODE_VERSION: '22'
+
+jobs:
+  check-dependencies:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check for outdated dependencies
+        id: check
+        run: |
+          OUTDATED=$(npm outdated --json || echo "{}")
+          echo "outdated=$OUTDATED" >> $GITHUB_OUTPUT
+          echo "has-updates=$([ "$OUTDATED" != "{}" ] && echo "true" || echo "false")" >> $GITHUB_OUTPUT
+
+      - name: Update dependencies
+        if: steps.check.outputs.has-updates == 'true'
+        run: |
+          npm update
+          npm audit fix
+
+      - name: Create Pull Request
+        if: steps.check.outputs.has-updates == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore: update dependencies'
+          title: 'chore: update dependencies'
+          body: |
+            This PR updates outdated dependencies.
+
+            ## Changes
+            - Updated npm dependencies to latest compatible versions
+            - Applied security fixes where available
+
+            ## Testing
+            Please review the changes and test thoroughly before merging.
+
+            ## Checklist
+            - [ ] All tests pass
+            - [ ] No breaking changes
+            - [ ] Security audit passes
+          branch: dependency-updates
+          delete-branch: true

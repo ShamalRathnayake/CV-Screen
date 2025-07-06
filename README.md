@@ -9,6 +9,7 @@ CV Screen is a production-ready, TypeScript-based REST API that leverages AI and
 - **File Uploads:** Secure, validated PDF uploads for CVs and JDs.
 - **Robust API:** RESTful endpoints for all major operations, with clear error handling and validation.
 - **Dockerized:** Easy deployment for both development and production.
+- **CI/CD Pipeline:** Automated testing, building, and deployment with GitHub Actions.
 
 ## 🛠️ Technologies Used
 - **Node.js** & **Express** (REST API framework)
@@ -22,11 +23,50 @@ CV Screen is a production-ready, TypeScript-based REST API that leverages AI and
 - **Docker** & **docker-compose** (containerization)
 - **Stripe** (payment integration)
 - **Helmet, CORS, Rate Limiting** (security)
+- **GitHub Actions** (CI/CD)
 
 ## 📦 Project Structure
 - `src/modules/` — Feature modules (CV, JD, prediction, upload, user)
 - `src/shared/` — Shared configs, middlewares, services, utils
 - `src/uploads/` — Uploaded PDF files
+- `.github/workflows/` — CI/CD pipeline configurations
+
+## 🔄 CI/CD Pipeline
+
+This project includes a comprehensive CI/CD pipeline with GitHub Actions:
+
+### Workflows
+- **Pull Request Checks** (`pull-request.yml`): Runs on PRs to main/develop
+  - Linting and code formatting
+  - Unit tests with MongoDB service
+  - Security audits
+  - Build verification
+
+- **Deploy** (`deploy.yml`): Runs on pushes to main/develop
+  - Builds and pushes Docker images to GitHub Container Registry
+  - Deploys to staging (develop branch)
+  - Deploys to production (main branch)
+
+- **Security** (`security.yml`): Runs on pushes, PRs, and weekly
+  - npm audit checks
+  - Snyk vulnerability scanning
+  - Container vulnerability scanning with Trivy
+
+- **Dependency Updates** (`dependency-updates.yml`): Runs weekly
+  - Checks for outdated dependencies
+  - Creates PRs for updates
+
+### Setup
+1. **Repository Secrets** (required):
+   - `SNYK_TOKEN`: Your Snyk API token for security scanning
+
+2. **Environment Protection** (recommended):
+   - Create `staging` and `production` environments in GitHub
+   - Add environment-specific secrets and protection rules
+
+3. **Branch Protection** (recommended):
+   - Require PR checks to pass before merging
+   - Require up-to-date branches before merging
 
 ## 📑 API Endpoints
 All endpoints are prefixed with `/api/v1`.
@@ -106,7 +146,6 @@ npm test
 - For LLM extraction, Ollama must be running and accessible at the configured URL.
 - Only PDF files are supported for upload.
 
-
-
 ---
+
 **Author:** Shamal Rathnayake
