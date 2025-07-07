@@ -1,7 +1,9 @@
 import dotenv from 'dotenv';
 import Joi from 'joi';
 
-dotenv.config();
+dotenv.config({
+  path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env',
+});
 
 const envSchema = Joi.object({
   PORT: Joi.number().default(4000),

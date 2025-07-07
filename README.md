@@ -140,6 +140,12 @@ The API will be available at `http://localhost:4000/api/v1`.
 npm test
 ```
 
+Vitest is used as the testing framework. You can also use the Vitest UI for interactive testing:
+
+```bash
+npx vitest --ui
+```
+
 ## 🛡️ Troubleshooting
 - Ensure MongoDB is running and accessible.
 - Check `.env` for all required variables.
