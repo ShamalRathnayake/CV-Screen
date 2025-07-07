@@ -4,7 +4,7 @@ import { createApp } from '../server';
 
 vi.mock('pdf-parse');
 
-describe.only('Health Check', () => {
+describe('Health Check', () => {
   it('should return 200 OK', async () => {
     const app = createApp();
     const res = await request(app).get('/api/v1/health');
