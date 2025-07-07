@@ -10,6 +10,7 @@ on:
 
 env:
   NODE_VERSION: '22'
+  HUSKY: 0
 
 jobs:
   security-audit:

@@ -12,6 +12,7 @@ env:
   NODE_VERSION: '22'
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  HUSKY: 0
 
 jobs:
   # Test and Lint
