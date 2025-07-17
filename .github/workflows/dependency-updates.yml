@@ -32,9 +32,10 @@ jobs:
           OUTDATED=$(npm outdated --json || echo "{}")
           OUTDATED_ENCODED=$(echo "$OUTDATED" | base64)
 
-          echo "outdated=$OUTDATED_ENCODED" >> $GITHUB_OUTPUT
           HAS_UPDATES=$([ "$OUTDATED" != "{}" ] && echo "true" || echo "false")
-          echo "has-updates=$HAS_UPDATES" >> $GITHUB_OUTPUT
+
+          printf "outdated=%s\n" "$OUTDATED_ENCODED" >> "$GITHUB_OUTPUT"
+          printf "has-updates=%s\n" "$HAS_UPDATES" >> "$GITHUB_OUTPUT"
 
       - name: Update dependencies
         if: steps.check.outputs.has-updates == 'true'
