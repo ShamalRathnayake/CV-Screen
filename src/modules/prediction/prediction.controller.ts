@@ -8,6 +8,11 @@ import {
 } from './prediction.types';
 import { createUnexpectedError } from '../../shared/utils/error.factory.utils';
 import Prediction from './prediction.service';
+import {
+  logger,
+  logRequestEnd,
+  logRequestInit,
+} from '../../shared/utils/logger.utils';
 
 export const makePrediction = async (
   req: Request<object, object, IPredictionRequest>,
@@ -15,7 +20,11 @@ export const makePrediction = async (
   next: NextFunction
 ): Promise<any> => {
   try {
+    await logRequestInit(req, 'makePrediction', 'Prediction process started');
+
     const prediction = await Prediction.makePrediction(req.body);
+
+    await logRequestEnd(req, 'makePrediction', 'Prediction made successfully');
 
     return sendSuccess(res, prediction, '', 200);
   } catch (err: any) {
@@ -30,9 +39,21 @@ export const makeMultiplePredictions = async (
   next: NextFunction
 ): Promise<any> => {
   try {
+    await logRequestInit(
+      req,
+      'makeMultiplePredictions',
+      'Prediction process started'
+    );
+
     const prediction = await Prediction.makeMultiplePredictions(
       req.body,
       req.user
+    );
+
+    await logRequestEnd(
+      req,
+      'makeMultiplePredictions',
+      'Prediction made successfully'
     );
 
     return sendSuccess(res, prediction, '', 200);

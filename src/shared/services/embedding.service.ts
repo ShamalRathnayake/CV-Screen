@@ -1,9 +1,8 @@
 import { pipeline, env } from '@xenova/transformers';
-import path from 'path';
 
 env.allowRemoteModels = true;
 env.useBrowserCache = false;
-env.localModelPath = path.resolve(__dirname, '../../transformers-cache');
+env.cacheDir = './.cache';
 
 export class EmbeddingService {
   private static instance: EmbeddingService;
@@ -23,7 +22,11 @@ export class EmbeddingService {
   private async init() {
     this.embedder = await pipeline(
       'feature-extraction',
-      'Xenova/all-MiniLM-L6-v2'
+      'Xenova/all-MiniLM-L6-v2',
+      {
+        // eslint-disable-next-line camelcase
+        cache_dir: './.cache',
+      }
     );
   }
 
@@ -36,6 +39,8 @@ export class EmbeddingService {
   }
 
   public async getAverageEmbedding(texts: string[]): Promise<number[]> {
+    if (!texts.length) return [];
+
     const vectors: number[][] = [];
 
     for (const text of texts) {
@@ -59,6 +64,13 @@ export class EmbeddingService {
     const dot = vec1.reduce((sum, v, i) => sum + v * vec2[i], 0);
     const mag1 = Math.sqrt(vec1.reduce((sum, v) => sum + v * v, 0));
     const mag2 = Math.sqrt(vec2.reduce((sum, v) => sum + v * v, 0));
-    return dot / (mag1 * mag2);
+
+    const denominator = mag1 * mag2;
+
+    if (denominator === 0) {
+      return 0;
+    }
+
+    return dot / denominator;
   }
 }

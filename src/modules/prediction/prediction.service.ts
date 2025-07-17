@@ -134,9 +134,9 @@ export default class Prediction {
       const savedCv = await CvData.saveCvData(extractedCv);
 
       let predictionRecord = new predictionModel({
-        cv_id: savedCv._id,
-        jd_id: savedJd._id,
-        user_id: userFromToken?.id,
+        cvId: savedCv._id,
+        jdId: savedJd._id,
+        userId: userFromToken?.id,
         cosineSimilarity,
       });
 

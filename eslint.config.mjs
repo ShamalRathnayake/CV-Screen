@@ -1,7 +1,7 @@
 import js from '@eslint/js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
-import { defineConfig } from 'eslint/config';
+import { defineConfig, globalIgnores } from 'eslint/config';
 import vitest from 'eslint-plugin-vitest';
 
 export default defineConfig([
@@ -19,6 +19,7 @@ export default defineConfig([
     files: ['**/*.ts', '**/*.tsx'],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
+      camelcase: 'error',
     },
   },
   {
@@ -35,4 +36,5 @@ export default defineConfig([
       },
     },
   },
+  globalIgnores(['./dist/']),
 ]);
