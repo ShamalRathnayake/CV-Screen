@@ -122,9 +122,9 @@ export class Transformer {
 
   public static extractTechnicalSkills(cv: any): string[] {
     const result: string[] = [];
-    if (cv.skills?.technical_skills?.length) {
+    if (cv.skills?.technicalSkills?.length) {
       result.push('Technical Skills:');
-      cv.skills.technical_skills.forEach((skill: string) =>
+      cv.skills.technicalSkills.forEach((skill: string) =>
         result.push(skill.replace(/,/g, ', '))
       );
     }
@@ -166,11 +166,11 @@ export class Transformer {
         (edu: {
           degree: string;
           institution: string;
-          start_date: string;
-          end_date: string;
+          startDate: string;
+          endDate: string;
         }) => {
           result.push(
-            `${edu.degree ?? 'Degree'} in ${edu.institution ?? 'Institution'} (${edu.start_date} to ${edu.end_date})`
+            `${edu.degree ?? 'Degree'} in ${edu.institution ?? 'Institution'} (${edu.startDate} to ${edu.endDate})`
           );
         }
       );
@@ -180,17 +180,17 @@ export class Transformer {
 
   public static extractWorkExperience(cv: any): string[] {
     const result: string[] = [];
-    if (cv.work_experience?.length) {
+    if (cv.workExperience?.length) {
       result.push('Work Experience:');
-      cv.work_experience.forEach(
+      cv.workExperience.forEach(
         (exp: {
           position: string;
           company: string;
-          start_date: string;
-          end_date: string;
+          startDate: string;
+          endDate: string;
         }) => {
           result.push(
-            `${exp.position ?? 'Position'} at ${exp.company ?? 'Company'} (${exp.start_date} to ${exp.end_date})`
+            `${exp.position ?? 'Position'} at ${exp.company ?? 'Company'} (${exp.startDate} to ${exp.endDate})`
           );
         }
       );
@@ -246,9 +246,9 @@ export class Transformer {
 
   public static extractVolunteerExperience(cv: any): string[] {
     const result: string[] = [];
-    if (cv.volunteer_experience?.length) {
+    if (cv.volunteerExperience?.length) {
       result.push('Volunteer Experience:');
-      cv.volunteer_experience.forEach(
+      cv.volunteerExperience.forEach(
         (vol: { role: string; organization: string }) => {
           result.push(`${vol.role} at ${vol.organization}`);
         }
@@ -260,11 +260,11 @@ export class Transformer {
   public static async prepareJDTextForEmbedding(jd: any): Promise<string[]> {
     const result: string[] = [];
 
-    if (jd.job_title) result.push(`Job Title: ${jd.job_title}`);
+    if (jd.jobTitle) result.push(`Job Title: ${jd.jobTitle}`);
 
-    if (jd.skills_required?.length) {
+    if (jd.skillsRequired?.length) {
       result.push('Required Skills:');
-      jd.skills_required.forEach((skill: string) => result.push(skill));
+      jd.skillsRequired.forEach((skill: string) => result.push(skill));
     }
 
     if (jd.responsibilities?.length) {
@@ -277,9 +277,9 @@ export class Transformer {
       jd.qualifications.forEach((q: string) => result.push(q));
     }
 
-    if (jd.preferred_qualifications?.length) {
+    if (jd.preferredQualifications?.length) {
       result.push('Preferred Qualifications:');
-      jd.preferred_qualifications.forEach((pq: string) => result.push(pq));
+      jd.preferredQualifications.forEach((pq: string) => result.push(pq));
     }
 
     return result;

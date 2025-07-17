@@ -79,6 +79,7 @@ export class UserService {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: proAccountCharge,
       currency: 'usd',
+      // eslint-disable-next-line camelcase
       automatic_payment_methods: { enabled: true },
     });
 

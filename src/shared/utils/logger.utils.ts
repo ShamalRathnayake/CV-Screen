@@ -3,6 +3,7 @@ import fs from 'fs';
 import { join } from 'path';
 import { format } from 'date-fns';
 import { Writable } from 'stream';
+import { Request } from 'express';
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -29,6 +30,7 @@ const logger = isProd
       pino.destination({ dest: getLogFilePath(), sync: false })
     )
   : pino({
+      level: 'debug',
       transport: {
         target: 'pino-pretty',
         options: {
@@ -39,7 +41,40 @@ const logger = isProd
       },
     });
 
-export { logger };
+const logRequestInit = async (
+  req: Request<object, object, any>,
+  action?: string,
+  logMsg?: string
+): Promise<void> => {
+  logger.info('---------------------------------------------');
+  logger.info(
+    {
+      action: action,
+      method: req.method,
+      route: req.originalUrl,
+      userId: req.user?.id || 'anonymous',
+      ip: req.ip,
+    },
+    logMsg
+  );
+};
+
+const logRequestEnd = async (
+  req: Request<object, object, any>,
+  action?: string,
+  logMsg?: string
+): Promise<void> => {
+  logger.info(
+    {
+      action: action,
+      userId: req.user?.id || 'anonymous',
+      ip: req.ip,
+    },
+    logMsg
+  );
+};
+
+export { logger, logRequestInit, logRequestEnd };
 
 export const morganStream = new Writable({
   write(chunk, _encoding, callback) {

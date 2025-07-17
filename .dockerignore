@@ -10,3 +10,4 @@ Dockerfile
 Dockerfile.dev
 docker-compose.yml
 llm 
+.cache

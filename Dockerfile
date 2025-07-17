@@ -1,23 +1,47 @@
 
-FROM node:20 AS builder
+FROM node:20-slim AS builder
 
 WORKDIR /app
+
 COPY package*.json ./
-RUN npm install --omit=dev --ignore-scripts
+COPY ./.husky ./.husky
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libvips-dev \
+    python3 \
+    make \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN npm ci
+
 COPY . ./
 
 RUN npm run build
 
 
 
-FROM node:20-alpine
+FROM node:20 AS release
 
 WORKDIR /app
+
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/dist ./dist
-RUN npm install --omit=dev --ignore-scripts
+COPY --from=builder /app/.husky ./.husky
 
-RUN node -e "const t = require('@xenova/transformers'); t.pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2')"
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libvips-dev \
+    python3 \
+    make \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN npm install --omit=dev 
+
+RUN npm rebuild sharp
 
 EXPOSE 4000
 

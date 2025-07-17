@@ -2,7 +2,6 @@
   "name": "cv-screen",
   "version": "1.0.0",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "test": "vitest run",
     "lint": "eslint . --ext .ts",
@@ -17,8 +16,9 @@
     "build": "tsc",
     "start": "node dist/main.js",
     "d-dev": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml --env-file .env.dev up --build -d && docker-compose logs -f app",
-    "d-prod": "docker-compose --env-file .env.prod up --build -d && docker-compose logs -f app",
-    "prepare": "husky"
+    "d-prod": "docker-compose --env-file .env.prod up --build --no-cache --force-recreate -d  && docker-compose logs -f app",
+    "d-prod-c": "docker-compose down -v --remove-orphans && docker-compose --env-file .env.prod build --no-cache && docker-compose --env-file .env.prod up -d --force-recreate && docker-compose logs -f app",
+    "prepare": "node .husky/install.mjs"
   },
   "author": "ShamalRathnayake",
   "license": "ISC",
@@ -41,9 +41,11 @@
     "morgan": "^1.10.0",
     "multer": "^2.0.1",
     "ollama": "^0.5.16",
+    "onnxruntime-node": "^1.22.0-rev",
     "pdf-parse": "^1.1.1",
     "pino": "^9.7.0",
     "pino-pretty": "^13.0.0",
+    "sharp": "^0.34.3",
     "stripe": "^18.2.1",
     "typescript": "^5.8.3"
   },
