@@ -1,0 +1,9 @@
+flask
+flask-cors
+scikit-learn
+joblib
+numpy
+gunicorn
+pymupdf 
+Pillow
+opencv-python
