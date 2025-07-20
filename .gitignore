@@ -12,3 +12,5 @@ dist/
 
 llm
 .cache
+
+uploads

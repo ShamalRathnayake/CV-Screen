@@ -11,6 +11,7 @@ const envSchema = Joi.object({
     .valid('development', 'production', 'test')
     .default('production'),
   DATABASE_URL: Joi.string().uri().required(),
+  MODEL_URL: Joi.string().uri().required(),
   JWT_SECRET: Joi.string().min(10).required(),
   LOG_LEVEL: Joi.string()
     .valid('error', 'warn', 'info', 'verbose', 'debug', 'silly')
@@ -30,6 +31,7 @@ export const config = {
   port: envVars.PORT,
   nodeEnv: envVars.NODE_ENV,
   databaseUrl: envVars.DATABASE_URL,
+  modelUrl: envVars.MODEL_URL,
   jwtSecret: envVars.JWT_SECRET,
   logLevel: envVars.LOG_LEVEL,
   stripeSecret: envVars.STRIPE_SECRET_KEY,

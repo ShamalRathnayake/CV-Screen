@@ -52,13 +52,13 @@ export default class Prediction {
     if (!cvData || cvData.length === 0)
       throw createInternalError('Prediction process failed');
 
-    const { cosineSimilarity, extractedCv } = cvData[0];
+    const { cosineSimilarity, extractedCv, image } = cvData[0];
 
     if (!cosineSimilarity || !extractedCv || !extractedJD)
       throw createInternalError('Prediction process failed');
 
     const savedJd = await JdData.saveJdData(extractedJD);
-    const savedCv = await CvData.saveCvData(extractedCv);
+    const savedCv = await CvData.saveCvData({ ...extractedCv, image });
 
     let predictionRecord = new predictionModel({
       cvId: savedCv._id,
@@ -77,6 +77,7 @@ export default class Prediction {
           cvId: savedCv._id.toString(),
           jdId: savedJd._id.toString(),
           predictionId: predictionRecord._id.toString(),
+          image,
         },
       ],
     };
@@ -109,7 +110,11 @@ export default class Prediction {
       extractedJD,
       cvData,
     }: {
-      cvData: { extractedCv: ICv; cosineSimilarity: ICosineSimilarity[] }[];
+      cvData: {
+        extractedCv: ICv;
+        cosineSimilarity: ICosineSimilarity[];
+        image: string;
+      }[];
       extractedJD: IJd;
     } = await predictionService.predict(
       [...cvFileNames.map((cv: any) => join(__dirname, multerConfig.path, cv))],
@@ -125,13 +130,13 @@ export default class Prediction {
     const result = [];
 
     for (const cvDataItem of cvData) {
-      const { cosineSimilarity, extractedCv } = cvDataItem;
+      const { cosineSimilarity, extractedCv, image } = cvDataItem;
 
       if (!cosineSimilarity || !extractedCv || !extractedJD)
         throw createInternalError('Prediction process failed');
 
       const savedJd = await JdData.saveJdData(extractedJD);
-      const savedCv = await CvData.saveCvData(extractedCv);
+      const savedCv = await CvData.saveCvData({ ...extractedCv, image });
 
       let predictionRecord = new predictionModel({
         cvId: savedCv._id,

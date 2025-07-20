@@ -17,6 +17,17 @@ services:
       - uploads:/app/uploads
     command: npm start
 
+  model:
+    build: 
+      context: .
+      dockerfile: ./model-server/Dockerfile
+    container_name: cvscreen-model
+    ports:
+      - '5000:5000'
+    restart: unless-stopped
+    
+    
+
   mongodb:
     image: mongo:7
     container_name: cvscreen-mongo

@@ -57,7 +57,7 @@ const jdSchema = new Schema(
     jobId: { type: String, default: null },
     source: { type: String, default: null },
   },
-  { collection: 'jd_data' }
+  { collection: 'jd_data', timestamps: true }
 );
 
 export default mongoose.model<IJd>('jd_data', jdSchema);

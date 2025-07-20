@@ -69,4 +69,5 @@ export interface ICv extends Document {
   workExperience: IWorkExperience[];
   certifications: ICertification[];
   projects: IProject[];
+  image?: string;
 }

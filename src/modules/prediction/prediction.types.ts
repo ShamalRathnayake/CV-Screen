@@ -20,6 +20,8 @@ export interface ICosineSimilarity {
   education?: number;
   workExp?: number;
   raw?: number;
+  hireProbability?: number;
+  hireDecision?: number;
 }
 
 export interface IPredictionResponse {
@@ -30,6 +32,7 @@ export interface IPredictionResponse {
     cvId: string;
     jdId: string;
     predictionId: string;
+    image?: string;
   }[];
 }
 

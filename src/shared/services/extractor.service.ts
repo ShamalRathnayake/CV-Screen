@@ -1,7 +1,12 @@
+import { createReadStream } from 'fs';
 import { commonConfig } from '../config/common.config';
 import { cvResFormat, jdResFormat } from '../config/response.config';
 import { logger } from '../utils/logger.utils';
 import { Ollama } from 'ollama';
+import axios from 'axios';
+import { config } from '../config/env.config';
+import path from 'path';
+import FormData from 'form-data';
 
 export class ExtractorService {
   private readonly model;
@@ -52,6 +57,27 @@ export class ExtractorService {
     } catch (err: any) {
       logger.error('Model call failed:', err.message);
       throw new Error('Failed to extract data using LLM');
+    }
+  }
+
+  public async extractImageFromCv(cvPath: string): Promise<string> {
+    try {
+      const cvFile = createReadStream(cvPath);
+      const form = new FormData();
+      form.append('file', cvFile, {
+        filename: path.basename(cvPath),
+        contentType: 'application/pdf',
+      });
+
+      const response = await axios.post(`${config.modelUrl}upload`, form, {
+        headers: form.getHeaders(),
+      });
+
+      if (response?.data?.status) return response?.data?.profile_image_base64;
+      return '';
+    } catch (err: any) {
+      logger.error('Extracting image failed:', err.message);
+      throw new Error('Failed to extract image using model server');
     }
   }
 }

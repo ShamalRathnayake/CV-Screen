@@ -87,8 +87,12 @@ const cvSchema = new Schema(
     workExperience: [workExperienceSchema],
     certifications: [certificationsSchema],
     projects: [projectsSchema],
+    image: {
+      type: String,
+      default: null,
+    },
   },
-  { collection: 'cv_data' }
+  { collection: 'cv_data', timestamps: true }
 );
 
 export default mongoose.model<ICv>('cv_data', cvSchema);
