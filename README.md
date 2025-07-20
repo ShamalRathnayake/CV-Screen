@@ -1,10 +1,12 @@
 # CV Screen
 
-CV Screen is a production-ready, TypeScript-based REST API that leverages AI and NLP to extract, structure, and match information from candidate CVs and job descriptions (JDs). It provides endpoints for uploading documents, extracting structured data, and predicting the suitability of candidates for job roles using advanced embedding and similarity techniques.
+CV Screen is a production-ready, TypeScript-based REST API that leverages AI, NLP, and computer vision to extract, structure, and match information from candidate CVs and job descriptions (JDs). It provides endpoints for uploading documents, extracting structured data, predicting the suitability of candidates for job roles using advanced embedding and similarity techniques, and extracting profile images from CVs.
 
 ## 🚀 Features
 - **CV & JD Extraction:** Uses LLMs to extract structured data from unstructured PDF CVs and job descriptions.
 - **AI-Powered Matching:** Computes similarity scores between CVs and JDs using transformer-based embeddings.
+- **AI-Powered Hire Prediction:** Predicts both the probability and binary decision of hiring a candidate using a trained machine learning model on CV and JD embeddings.
+- **Profile Image Extraction:** Automatically extracts and detects profile images from CV PDFs using OpenCV and PyMuPDF, returning the image if a face is found.
 - **Authentication & User Management:** Secure user registration, login, and profile management.
 - **File Uploads:** Secure, validated PDF uploads for CVs and JDs.
 - **Robust API:** RESTful endpoints for all major operations, with clear error handling and validation.
@@ -18,7 +20,8 @@ CV Screen is a production-ready, TypeScript-based REST API that leverages AI and
 - **Mongoose** (ODM)
 - **@xenova/transformers** (embeddings for similarity)
 - **Ollama** (LLM for extraction)
-- **Jest** (testing)
+- **Python** (Flask, scikit-learn, joblib, numpy, PyMuPDF, Pillow, OpenCV) — Model server and image extraction
+- **Jest** and **Vitest** (testing)
 - **Multer** (file uploads)
 - **Docker** & **docker-compose** (containerization)
 - **Stripe** (payment integration)
@@ -29,6 +32,7 @@ CV Screen is a production-ready, TypeScript-based REST API that leverages AI and
 - `src/modules/` — Feature modules (CV, JD, prediction, upload, user)
 - `src/shared/` — Shared configs, middlewares, services, utils
 - `src/uploads/` — Uploaded PDF files
+- `model-server/` — Python Flask app for AI model serving and image extraction
 - `.github/workflows/` — CI/CD pipeline configurations
 
 ## 🔄 CI/CD Pipeline
@@ -82,11 +86,18 @@ All endpoints are prefixed with `/api/v1`.
 - `POST   /upload/` — Upload one or more PDF files (field: `file`)
 
 ### Prediction
-- `POST   /prediction/` — Predict suitability for a single CV & JD
+- `POST   /prediction/` — Predict suitability for a single CV & JD. 
+  - `hireProbability` (float, 0-1): Probability of hire from AI model
+  - `hireDecision` (0 or 1): Binary hire decision from AI model
+  - `image` (base64 string): Extracted profile image from CV (if detected)
 - `POST   /prediction/multi` — Predict for multiple CVs (auth required)
 
 ### Health
 - `GET    /health` — Health check
+
+#### Python Model Server (internal)
+- `POST   /predict` — Receives embeddings, returns `hire_probability` and `hire_decision`
+- `POST   /upload` — Receives a PDF, returns `profile_image_base64` if a face is detected
 
 ## 🏗️ Setup & Running
 
@@ -134,6 +145,8 @@ The API will be available at `http://localhost:4000/api/v1`.
 - **Extraction:** LLM (via Ollama) parses PDFs to extract structured candidate/job data.
 - **Embedding:** Text is embedded using `@xenova/transformers` (MiniLM-L6-v2).
 - **Matching:** Cosine similarity is computed between CV and JD embeddings for overall, technical, education, and work experience fit.
+- **Hire Prediction:** The backend sends combined CV and JD embeddings to a Python model server, which returns the probability and decision for hiring.
+- **Image Extraction:** Uploaded CV PDFs are processed to extract images; OpenCV detects faces, and the first detected face image is returned as a base64 string and stored with the CV data.
 
 ## 🧪 Testing
 ```bash
@@ -150,6 +163,7 @@ npx vitest --ui
 - Ensure MongoDB is running and accessible.
 - Check `.env` for all required variables.
 - For LLM extraction, Ollama must be running and accessible at the configured URL.
+- For AI-powered hire prediction and image extraction, ensure the Python model server is running and accessible at the configured URL. All Python dependencies (Flask, scikit-learn, joblib, numpy, PyMuPDF, Pillow, OpenCV) must be installed.
 - Only PDF files are supported for upload.
 
 ---
