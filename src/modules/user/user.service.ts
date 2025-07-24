@@ -22,7 +22,7 @@ export class UserService {
     if (!designation) throw createBadRequest('Designation is required');
     if (!location) throw createBadRequest('Location is required');
 
-    const existing = await UserModel.findOne({ email: email });
+    const existing = await this.checkUserExistsByEmail(email);
     if (existing)
       throw createUnprocessableEntity('User already exists with given email');
 
@@ -57,6 +57,12 @@ export class UserService {
 
   static async checkUserExists(id: string) {
     const user = await UserModel.findById(id).select('_id');
+    if (!user) return false;
+    return true;
+  }
+
+  static async checkUserExistsByEmail(email: string) {
+    const user = await UserModel.findOne({ email: email });
     if (!user) return false;
     return true;
   }

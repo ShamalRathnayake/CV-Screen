@@ -82,7 +82,7 @@ const projectsSchema = new Schema<IProject>({
 const cvSchema = new Schema(
   {
     personalInfo: { type: personalInfoSchema, required: true },
-    skills: { type: skillsSchema, required: true },
+    skills: { type: skillsSchema },
     education: [educationSchema],
     workExperience: [workExperienceSchema],
     certifications: [certificationsSchema],

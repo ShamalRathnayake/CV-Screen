@@ -23,3 +23,7 @@ export const loginSchema = Joi.object().keys({
   email: Joi.string().trim().required(),
   password: Joi.string().min(8).max(50).required(),
 });
+
+export const checkEmailSchema = Joi.object().keys({
+  email: Joi.string().trim().required(),
+});

@@ -6,6 +6,9 @@ import { logger } from '../utils/logger.utils';
 // import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import axios from 'axios';
 import { config } from '../config/env.config';
+import { IJd } from '../../modules/jdData/jdData.types';
+import { createUnprocessableEntity } from '../utils/error.factory.utils';
+import { ICv } from '../../modules/cvData/cvData.types';
 
 export class PredictorService {
   private static instance: PredictorService;
@@ -29,9 +32,14 @@ export class PredictorService {
     const extractor = await ExtractorService.getInstance();
     const embedding = await EmbeddingService.getInstance();
 
-    const extractedJD = await extractor.extractFromJD(jdText);
+    const extractedJD: Partial<IJd> = await extractor.extractFromJD(jdText);
 
     logger.debug('Extracted JD text');
+
+    if (!extractedJD.jobTitle)
+      throw createUnprocessableEntity(
+        'Failed to extract data from provided job description'
+      );
 
     const preparedJD = await Transformer.prepareJDTextForEmbedding(extractedJD);
 
@@ -49,9 +57,14 @@ export class PredictorService {
       cvPaths.map(async (cvPath) => {
         const cvText = await readPdf(cvPath);
 
-        const extractedCv = await extractor.extractFromCV(cvText);
+        const extractedCv: Partial<ICv> = await extractor.extractFromCV(cvText);
 
         logger.debug('Extracted CV text');
+
+        if (!extractedCv.personalInfo)
+          throw createUnprocessableEntity(
+            'Failed to extract data from provided cv file'
+          );
 
         const preparedCv =
           await Transformer.prepareCVTextForEmbedding(extractedCv);

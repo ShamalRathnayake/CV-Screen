@@ -5,12 +5,14 @@ import { ValidatorService } from '../../shared/services/validator.service';
 import { validationSource } from '../../shared/types/validationSource.enum';
 import { permissions } from './user.permissions';
 import {
+  checkEmailSchema,
   createUserSchema,
   getUserByIdSchema,
   loginSchema,
   updateUserSchema,
 } from './user.schema';
 import {
+  checkEmail,
   createPayment,
   createUser,
   getUserById,
@@ -19,6 +21,12 @@ import {
 } from './user.controller';
 
 const router = Router();
+
+router.get(
+  permissions.checkEmail.path,
+  ValidatorService.validate(validationSource.query, checkEmailSchema),
+  checkEmail
+);
 
 router.post(
   permissions.createUser.path,

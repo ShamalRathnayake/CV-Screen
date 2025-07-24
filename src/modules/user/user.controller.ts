@@ -98,3 +98,20 @@ export const login = async (
     else throw createUnexpectedError(err?.message);
   }
 };
+
+export const checkEmail = async (
+  req: Request<object, object, object, { email: string }>,
+  res: Response,
+  next: NextFunction
+): Promise<any> => {
+  try {
+    await logRequestInit(req, 'checkEmail', 'Check email process started');
+    const result = await UserService.checkUserExistsByEmail(req.query.email);
+    await logRequestEnd(req, 'checkEmail', 'Check email process successfull');
+
+    return sendSuccess(res, result, '', 200);
+  } catch (err: any) {
+    if (err instanceof AppError) next(err);
+    else throw createUnexpectedError(err?.message);
+  }
+};

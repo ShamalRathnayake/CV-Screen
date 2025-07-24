@@ -19,4 +19,7 @@ export const permissions = {
     path: '/login',
     grantedUserRoles: [UserRole.USER],
   },
+  checkEmail: {
+    path: '/check-email',
+  },
 };

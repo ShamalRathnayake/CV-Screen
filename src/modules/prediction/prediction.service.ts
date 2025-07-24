@@ -22,20 +22,20 @@ import { IUser } from '../user/user.types';
 export default class Prediction {
   static async makePrediction({
     cvFileName,
-    jdFilename,
+    jdFileName,
     jdText,
   }: IPredictionRequest): Promise<IPredictionResponse> {
     if (!cvFileName) throw createBadRequest('cvFileName is required');
 
-    if (!jdFilename && !jdText)
-      throw createBadRequest('jdFilename or jdText is required');
+    if (!jdFileName && !jdText)
+      throw createBadRequest('jdFileName or jdText is required');
 
     if (!existsSync(join(__dirname, multerConfig.path, cvFileName)))
       throw createBadRequest('CV not found');
 
     if (
-      jdFilename &&
-      !existsSync(join(__dirname, multerConfig.path, jdFilename))
+      jdFileName &&
+      !existsSync(join(__dirname, multerConfig.path, jdFileName))
     )
       throw createBadRequest('Job description not found');
 
@@ -43,10 +43,10 @@ export default class Prediction {
 
     const { extractedJD, cvData } = await predictionService.predict(
       [join(__dirname, multerConfig.path, cvFileName)],
-      jdFilename
-        ? join(__dirname, multerConfig.path, jdFilename)
+      jdFileName
+        ? join(__dirname, multerConfig.path, jdFileName)
         : (jdText as string),
-      !!jdFilename
+      !!jdFileName
     );
 
     if (!cvData || cvData.length === 0)
@@ -84,14 +84,14 @@ export default class Prediction {
   }
 
   static async makeMultiplePredictions(
-    { cvFileNames, jdFilename, jdText }: IPredictionRequestMultiple,
+    { cvFileNames, jdFileName, jdText }: IPredictionRequestMultiple,
     userFromToken?: Partial<IUser>
   ): Promise<IPredictionResponse> {
     if (!cvFileNames || cvFileNames.length === 0)
       throw createBadRequest('cvFileNames is required');
 
-    if (!jdFilename && !jdText)
-      throw createBadRequest('jdFilename or jdText is required');
+    if (!jdFileName && !jdText)
+      throw createBadRequest('jdFileName or jdText is required');
 
     for (const cvFileName of cvFileNames) {
       if (!existsSync(join(__dirname, multerConfig.path, cvFileName)))
@@ -99,8 +99,8 @@ export default class Prediction {
     }
 
     if (
-      jdFilename &&
-      !existsSync(join(__dirname, multerConfig.path, jdFilename))
+      jdFileName &&
+      !existsSync(join(__dirname, multerConfig.path, jdFileName))
     )
       throw createBadRequest('Job description not found');
 
@@ -118,10 +118,10 @@ export default class Prediction {
       extractedJD: IJd;
     } = await predictionService.predict(
       [...cvFileNames.map((cv: any) => join(__dirname, multerConfig.path, cv))],
-      jdFilename
-        ? join(__dirname, multerConfig.path, jdFilename)
+      jdFileName
+        ? join(__dirname, multerConfig.path, jdFileName)
         : (jdText as string),
-      !!jdFilename
+      !!jdFileName
     );
 
     if (!cvData || cvData.length === 0)

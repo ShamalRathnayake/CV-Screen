@@ -4,13 +4,13 @@ import { IJd } from '../jdData/jdData.types';
 
 export interface IPredictionRequest {
   cvFileName: string;
-  jdFilename?: string;
+  jdFileName?: string;
   jdText?: string;
 }
 
 export interface IPredictionRequestMultiple {
   cvFileNames: Array<string>;
-  jdFilename?: string;
+  jdFileName?: string;
   jdText?: string;
 }
 

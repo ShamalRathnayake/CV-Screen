@@ -13,7 +13,7 @@ const salaryRangeSchema = new Schema<ISalaryRange>({
 });
 
 const educationRequirementSchema = new Schema<IEducationRequirement>({
-  degree: { type: String, default: null, required: true },
+  degree: { type: String, default: null },
   fieldOfStudy: { type: String, default: null },
   required: { type: Boolean, default: null },
 });
@@ -43,10 +43,10 @@ const jdSchema = new Schema(
     },
     requiredExperienceYears: { type: Number, default: null },
     salaryRange: salaryRangeSchema,
-    skillsRequired: { type: [String], required: true },
+    skillsRequired: { type: [String] },
     technologies: [String],
     educationRequirements: [educationRequirementSchema],
-    responsibilities: { type: [String], required: true },
+    responsibilities: { type: [String] },
     qualifications: [String],
     preferredQualifications: [String],
     softSkills: [String],
