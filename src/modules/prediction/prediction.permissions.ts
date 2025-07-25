@@ -12,4 +12,8 @@ export const permissions = {
     path: '/analytics',
     grantedUserRoles: [UserRole.USER],
   },
+  getPredictions: {
+    path: '/',
+    grantedUserRoles: [UserRole.USER],
+  },
 };

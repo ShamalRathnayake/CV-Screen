@@ -1,11 +1,13 @@
 import { Router } from 'express';
 import {
   getAnalytics,
+  getPredictions,
   makeMultiplePredictions,
   makePrediction,
 } from './prediction.controller';
 import { ValidatorService } from '../../shared/services/validator.service';
 import {
+  getPredictionsSchema,
   makePredictionSchema,
   multiplePredictionSchema,
 } from './prediction.schema';
@@ -39,6 +41,16 @@ router.post(
   ),
   ValidatorService.validate(validationSource.body, multiplePredictionSchema),
   makeMultiplePredictions
+);
+
+router.get(
+  permissions.getPredictions.path,
+  ValidatorService.validate(
+    validationSource.query,
+    getPredictionsSchema,
+    permissions.getPredictions.grantedUserRoles
+  ),
+  getPredictions
 );
 
 export default router;

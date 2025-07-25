@@ -15,3 +15,8 @@ export const multiplePredictionSchema = Joi.object()
     jdText: Joi.string(),
   })
   .xor('jdFileName', 'jdText');
+
+export const getPredictionsSchema = Joi.object().keys({
+  limit: Joi.number(),
+  page: Joi.number(),
+});

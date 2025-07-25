@@ -1,5 +1,6 @@
 import { existsSync } from 'fs';
 import {
+  GetPredictionRequest,
   ICosineSimilarity,
   IPredictionRequest,
   IPredictionRequestMultiple,
@@ -170,9 +171,9 @@ export default class Prediction {
     averageHireProbability: number;
     vacanciesByType: any[];
   }> {
-    const totalCvs = await cvDataModel.find({}).countDocuments();
+    const totalCvs = await cvDataModel.countDocuments();
 
-    const totalJds = await jdDataModel.find({}).countDocuments();
+    const totalJds = await jdDataModel.countDocuments();
 
     const averageMatchTotalResponse = await predictionModel.aggregate([
       {
@@ -219,6 +220,48 @@ export default class Prediction {
       averageMatchTotal,
       averageHireProbability,
       vacanciesByType,
+    };
+  }
+
+  static async getPredictions(
+    { page = 1, limit = 10 }: GetPredictionRequest,
+    userFromToken?: Partial<IUser>
+  ): Promise<any> {
+    const skip = (page - 1) * limit;
+
+    const [predictions, total] = await Promise.all([
+      predictionModel
+        .find({ userId: userFromToken?.id })
+        .populate('cvId')
+        .populate('jdId')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+      predictionModel.countDocuments({ userId: userFromToken?.id }),
+    ]);
+
+    const results = [];
+
+    for (const record of predictions) {
+      const result = [
+        {
+          cosineSimilarity: record.cosineSimilarity,
+          extractedCv: record.cvId,
+          cvId: record.cvId._id.toString(),
+          jdId: record.jdId._id.toString(),
+          predictionId: record._id.toString(),
+          image: (record.cvId as any).image,
+        },
+      ];
+
+      results.push({ extractedJD: record.jdId, result });
+    }
+
+    return {
+      predictions: results,
+      total,
+      page,
+      limit,
     };
   }
 }

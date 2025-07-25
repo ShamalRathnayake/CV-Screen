@@ -49,3 +49,8 @@ export interface IPrediction extends Document {
     raw?: number;
   };
 }
+
+export type GetPredictionRequest = {
+  page?: number;
+  limit?: number;
+};
