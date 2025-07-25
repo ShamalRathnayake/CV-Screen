@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {
+  getAnalytics,
   makeMultiplePredictions,
   makePrediction,
 } from './prediction.controller';
@@ -12,6 +13,16 @@ import { validationSource } from '../../shared/types/validationSource.enum';
 import { permissions } from './prediction.permissions';
 
 const router = Router();
+
+router.get(
+  permissions.getAnalytics.path,
+  ValidatorService.validate(
+    validationSource.headers,
+    undefined,
+    permissions.getAnalytics.grantedUserRoles
+  ),
+  getAnalytics
+);
 
 router.post(
   permissions.singlePrediction.path,

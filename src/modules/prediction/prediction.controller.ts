@@ -62,3 +62,22 @@ export const makeMultiplePredictions = async (
     else throw createUnexpectedError(err?.message);
   }
 };
+
+export const getAnalytics = async (
+  req: Request<object, object, object>,
+  res: Response,
+  next: NextFunction
+): Promise<any> => {
+  try {
+    await logRequestInit(req, 'getAnalytics', 'Analytics process started');
+
+    const analytics = await Prediction.getAnalytics();
+
+    await logRequestEnd(req, 'getAnalytics', 'Analytics gathered successfully');
+
+    return sendSuccess(res, analytics, '', 200);
+  } catch (err: any) {
+    if (err instanceof AppError) next(err);
+    else throw createUnexpectedError(err?.message);
+  }
+};

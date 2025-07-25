@@ -8,4 +8,8 @@ export const permissions = {
     path: '/multi',
     grantedUserRoles: [UserRole.USER],
   },
+  getAnalytics: {
+    path: '/analytics',
+    grantedUserRoles: [UserRole.USER],
+  },
 };

@@ -18,6 +18,8 @@ import predictionModel from './prediction.model';
 import { ICv } from '../cvData/cvData.types';
 import { IJd } from '../jdData/jdData.types';
 import { IUser } from '../user/user.types';
+import cvDataModel from '../cvData/cvData.model';
+import jdDataModel from '../jdData/jdData.model';
 
 export default class Prediction {
   static async makePrediction({
@@ -127,6 +129,8 @@ export default class Prediction {
     if (!cvData || cvData.length === 0)
       throw createInternalError('Prediction process failed');
 
+    const savedJd = await JdData.saveJdData(extractedJD);
+
     const result = [];
 
     for (const cvDataItem of cvData) {
@@ -135,7 +139,6 @@ export default class Prediction {
       if (!cosineSimilarity || !extractedCv || !extractedJD)
         throw createInternalError('Prediction process failed');
 
-      const savedJd = await JdData.saveJdData(extractedJD);
       const savedCv = await CvData.saveCvData({ ...extractedCv, image });
 
       let predictionRecord = new predictionModel({
@@ -153,9 +156,69 @@ export default class Prediction {
         cvId: savedCv._id.toString(),
         jdId: savedJd._id.toString(),
         predictionId: predictionRecord._id.toString(),
+        image,
       });
     }
 
     return { extractedJD, result };
+  }
+
+  static async getAnalytics(): Promise<{
+    totalCvs: number;
+    totalJds: number;
+    averageMatchTotal: number;
+    averageHireProbability: number;
+    vacanciesByType: any[];
+  }> {
+    const totalCvs = await cvDataModel.find({}).countDocuments();
+
+    const totalJds = await jdDataModel.find({}).countDocuments();
+
+    const averageMatchTotalResponse = await predictionModel.aggregate([
+      {
+        $group: {
+          _id: null,
+          averageScore: { $avg: '$cosineSimilarity.raw' },
+        },
+      },
+    ]);
+
+    const averageMatchTotal =
+      averageMatchTotalResponse?.length > 0
+        ? averageMatchTotalResponse[0]?.averageScore
+        : 0;
+
+    const averageHireProbabilityResponse = await predictionModel.aggregate([
+      {
+        $group: {
+          _id: null,
+          averageScore: { $avg: '$cosineSimilarity.hireProbability' },
+        },
+      },
+    ]);
+
+    const averageHireProbability =
+      averageHireProbabilityResponse?.length > 0
+        ? averageHireProbabilityResponse[0]?.averageScore
+        : 0;
+
+    const vacanciesByType = await jdDataModel.aggregate([
+      {
+        $group: {
+          _id: '$jobTitle',
+          total: {
+            $sum: 1,
+          },
+        },
+      },
+    ]);
+
+    return {
+      totalCvs,
+      totalJds,
+      averageMatchTotal,
+      averageHireProbability,
+      vacanciesByType,
+    };
   }
 }
