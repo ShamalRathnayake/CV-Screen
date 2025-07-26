@@ -42,7 +42,7 @@
     "morgan": "^1.10.0",
     "multer": "^2.0.1",
     "ollama": "^0.5.16",
-    "onnxruntime-node": "^1.22.0-rev",
+    "onnxruntime-node": "^1.22.0",
     "pdf-parse": "^1.1.1",
     "pino": "^9.7.0",
     "pino-pretty": "^13.0.0",
